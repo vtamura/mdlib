@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import fs from 'fs'
 
-const throwError = err => {
+const handleError = err => {
     throw new Error(chalk.red(err.code, 'Caminho/Arquivo inválido.'))
 }
 
@@ -10,10 +10,10 @@ const getFile = async filePath => {
 
     try {
         const text = await fs.promises.readFile(filePath, encode)
-        getLinks(text)
+        return getLinks(text)
     }
     catch(err) {
-        throwError(err)
+        handleError(err)
     }
 }
 
@@ -26,7 +26,9 @@ const getLinks = txt => {
         arrayLinks.push({ [temp[1]]: temp[2] })
     }
     // arrayLinks.push({ [regex.exec(txt)[1]]: regex.exec(txt)[2] })
-    console.log(arrayLinks)
+    return arrayLinks.length === 0 ? chalk.red("Não há links.") : arrayLinks
 }
 
-getFile('./arquivos/texto1.md')
+// getFile('./arquivos/texto1.md')
+
+export default getFile
